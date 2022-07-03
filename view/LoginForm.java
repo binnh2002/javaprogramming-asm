@@ -23,9 +23,6 @@ public class LoginForm extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
-    public char[] getPassword() {
-        return pfPassword.getPassword();
-    }
     public User user;
     public User getAuthenticatedUser(String email, String password) {
         User user = null;
