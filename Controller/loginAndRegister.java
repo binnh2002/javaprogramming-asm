@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.User;
+import view.DashboardForm;
 import view.LoginForm;
 import view.RegistrationForm;
 
@@ -11,28 +12,65 @@ public class loginAndRegister {
     private LoginForm loginForm;
     private RegistrationForm registrationForm;
 
-    public loginAndRegister(LoginForm loginForm, RegistrationForm registrationForm) {
+    private DashboardForm dashboardForm;
+
+    public loginAndRegister(LoginForm loginForm, RegistrationForm registrationForm, DashboardForm dashboardForm) {
         this.loginForm = loginForm;
         this.registrationForm = registrationForm;
+        this.dashboardForm = dashboardForm;
 
         this.registrationForm.addRegistrationListener(new RegisterListener());
-        this.registrationForm.addCancelListener(new CancelListener());
+        this.registrationForm.addBackToLogin(new BackToLoginListener());
+        this.registrationForm.btnExitListener(new regExitListener());
 
+        this.loginForm.btnLoginListener(new LoginListener());
+        this.loginForm.btnNewAccountListener(new NewAccountListener());
+        this.loginForm.btnExitListener(new logExitListener());
+
+        this.dashboardForm.btnAddListener(new AddListener());
+        this.dashboardForm.btnRefreshListener(new RefreshListener());
+        this.dashboardForm.btnUpdateListener(new UpdateListener());
+        this.dashboardForm.btnRemoveListener(new RemoveListener());
     }
 
+    class LoginListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            loginForm.loginUser();
+            if (loginForm.user != null) {
+                loginForm.dispose();
+                dashboardForm.setVisible(true);
+            }
+
+        }
+    }
+
+    class NewAccountListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            loginForm.setVisible(false);
+            registrationForm.setVisible(true);
+        }
+    }
+    class logExitListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            loginForm.dispose();
+        }
+    }
     class RegisterListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
+
                 registrationForm.registerUser();
-                if (registrationForm.user != null) {
-                    System.out.println("Successfully registered user " + registrationForm.user.fullName);
-                    registrationForm.setVisible(false);
-                    loginForm.setVisible(true);
-                }else {
-                    System.out.println("Failed to register user ");
-                }
+
+            if (registrationForm.user != null){
+                loginForm.setVisible(true);
+            }
 
             } catch (Exception c){
                 c.printStackTrace();
@@ -41,11 +79,47 @@ public class loginAndRegister {
         }
 
     }
-    class CancelListener implements ActionListener {
+    class BackToLoginListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            registrationForm.setVisible(false);
+            loginForm.setVisible(true);
+        }
+    }
+
+    class regExitListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             registrationForm.dispose();
+        }
+    }
+
+    class AddListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dashboardForm.setData();
+        }
+    }
+
+    class RefreshListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dashboardForm.getData();
+        }
+    }
+
+    class UpdateListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dashboardForm.UpdateListener();
+        }
+    }
+
+    class RemoveListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          dashboardForm.removeListener();
         }
     }
 

@@ -1,11 +1,9 @@
 package view;
 
 import Model.User;
-import Controller.loginAndRegister;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
@@ -18,7 +16,8 @@ public class RegistrationForm extends JDialog {
     private JPasswordField pfPassword;
     private JPasswordField pfRepassword;
     private JButton btnRegister;
-    private JButton btnCancel;
+    private JButton btnBackToLogin;
+    private JButton btnExit;
 
     public RegistrationForm(JFrame parent) {
         super(parent);
@@ -26,6 +25,7 @@ public class RegistrationForm extends JDialog {
         setContentPane(registerPanel);
         setMinimumSize(new Dimension(450, 500));
         setModal(true);
+        setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
     // If the registerbutton is clicked execute a method
@@ -34,17 +34,20 @@ public class RegistrationForm extends JDialog {
         btnRegister.addActionListener(listenerRegistration);
     }
 
-    public void addCancelListener(ActionListener listenerCancel) {
-        btnCancel.addActionListener(listenerCancel);
+    public void addBackToLogin(ActionListener listenerCancel) {
+        btnBackToLogin.addActionListener(listenerCancel);
     }
 
+    public void btnExitListener(ActionListener btnExitListener){
+        btnExit.addActionListener(btnExitListener);
+    }
     public void registerUser() {
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
         String email = txtEmail.getText();
         String password = String.valueOf(pfPassword.getPassword());
         String rePassword = String.valueOf(pfRepassword.getPassword());
-        String fullName = firstName + "" + lastName;
+        String fullName = firstName + " " + lastName;
 
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty() || rePassword.isEmpty()) {
             JOptionPane.showMessageDialog(this,
@@ -63,6 +66,7 @@ public class RegistrationForm extends JDialog {
         }
         user = addUserToDatabase(fullName, email, password);
         if (user != null) {
+            JOptionPane.showMessageDialog(this,"Register successfully!!");
             dispose();
         }
         else {
